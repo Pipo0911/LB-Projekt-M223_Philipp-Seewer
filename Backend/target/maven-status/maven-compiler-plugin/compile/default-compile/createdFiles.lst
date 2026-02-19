@@ -1,0 +1,5 @@
+ch\wiss\m295\steamlibrary\controller\GlobalExceptionHandler.class
+ch\wiss\m295\steamlibrary\repository\GameRepository.class
+ch\wiss\m295\steamlibrary\model\Game.class
+ch\wiss\m295\steamlibrary\SteamLibraryApplication.class
+ch\wiss\m295\steamlibrary\controller\GameController.class

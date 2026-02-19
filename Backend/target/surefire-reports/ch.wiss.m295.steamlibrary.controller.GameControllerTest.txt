@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: ch.wiss.m295.steamlibrary.controller.GameControllerTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.95 s -- in ch.wiss.m295.steamlibrary.controller.GameControllerTest

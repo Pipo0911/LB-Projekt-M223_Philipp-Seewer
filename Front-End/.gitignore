@@ -1,0 +1,23 @@
+# Frontend
+node_modules/
+dist/
+.vite/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+env/
+
+# Secrets
+.env
+.env.*
+*.db
+
+# OS / Editor
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Helper scripts
+fix-*.ps1
