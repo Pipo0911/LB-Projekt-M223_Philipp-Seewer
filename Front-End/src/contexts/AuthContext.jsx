@@ -30,13 +30,13 @@ export const AuthProvider = ({ children }) => {
     setLoading(false)
   }, [])
 
-  const login = async (user, password) => {
+  const login = async (username, password) => {
     setLoading(true)
     // TODO 2: Login implementieren
     const res = await fetch(`${API_URL}/signin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: user, password }),
+      body: JSON.stringify({ username, password }),
     })
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))

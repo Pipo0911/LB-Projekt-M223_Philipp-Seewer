@@ -2,73 +2,77 @@ package ch.wiss.m295.steamlibrary.controller;
 
 import ch.wiss.m295.steamlibrary.model.Game;
 import ch.wiss.m295.steamlibrary.repository.GameRepository;
+import ch.wiss.m295.steamlibrary.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
-import java.net.URI;
+import java.time.LocalDate;
+
 /**
  * REST controller for managing games in the Steam library.
  * <p>
- * Provides CRUD endpoints and optional filtering via query parameters.
+ * Provides CRUD endpoints with Spring Security protection.
  * </p>
  */
 
 @RestController
-@RequestMapping("/games")
+@RequestMapping("/api/games")
 public class GameController {
 
     private final GameRepository repo;
+    private final UserRepository userRepository;
 
-    public GameController(GameRepository repo) {
+    public GameController(GameRepository repo, UserRepository userRepository) {
         this.repo = repo;
+        this.userRepository = userRepository;
     }
 
     // GET /games (optional mit Filtern)
-@GetMapping
-public Iterable<Game> getAll(
-        @RequestParam(required = false) String title,
-        @RequestParam(required = false) Boolean installed,
-        @RequestParam(required = false) Integer minPlaytime,
-        @RequestParam(required = false) String lastPlayedAfter
-) {
-    // 1) Wenn genau EIN Filter gesetzt ist -> Repository-Query (zeigt JPA/Derived Queries)
-    if (title != null && installed == null && minPlaytime == null && lastPlayedAfter == null) {
-        return repo.findByTitleContainingIgnoreCase(title);
-    }
-    if (installed != null && title == null && minPlaytime == null && lastPlayedAfter == null) {
-        return repo.findByInstalled(installed);
-    }
-    if (minPlaytime != null && title == null && installed == null && lastPlayedAfter == null) {
-        return repo.findByPlaytimeHoursGreaterThanEqual(minPlaytime);
-    }
-    if (lastPlayedAfter != null && title == null && installed == null && minPlaytime == null) {
-        return repo.findByLastPlayedAfter(java.time.LocalDate.parse(lastPlayedAfter));
-    }
+    @GetMapping
+    public Iterable<Game> getAll(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Boolean installed,
+            @RequestParam(required = false) Integer minPlaytime,
+            @RequestParam(required = false) String lastPlayedAfter
+    ) {
+        // 1) Wenn genau EIN Filter gesetzt ist -> Repository-Query
+        if (title != null && installed == null && minPlaytime == null && lastPlayedAfter == null) {
+            return repo.findByTitleContainingIgnoreCase(title);
+        }
+        if (installed != null && title == null && minPlaytime == null && lastPlayedAfter == null) {
+            return repo.findByInstalled(installed);
+        }
+        if (minPlaytime != null && title == null && installed == null && lastPlayedAfter == null) {
+            return repo.findByPlaytimeHoursGreaterThanEqual(minPlaytime);
+        }
+        if (lastPlayedAfter != null && title == null && installed == null && minPlaytime == null) {
+            return repo.findByLastPlayedAfter(LocalDate.parse(lastPlayedAfter));
+        }
 
-    // 2) Wenn mehrere Filter kombiniert werden -> einfache In-Memory Filterung (für Schulprojekt völlig ok)
-    java.util.List<Game> result = new java.util.ArrayList<>();
-    for (Game g : repo.findAll()) {
-        if (title != null && (g.getTitle() == null || !g.getTitle().toLowerCase().contains(title.toLowerCase()))) {
-            continue;
-        }
-        if (installed != null && (g.getInstalled() == null || !g.getInstalled().equals(installed))) {
-            continue;
-        }
-        if (minPlaytime != null && (g.getPlaytimeHours() == null || g.getPlaytimeHours() < minPlaytime)) {
-            continue;
-        }
-        if (lastPlayedAfter != null) {
-            java.time.LocalDate date = java.time.LocalDate.parse(lastPlayedAfter);
-            if (g.getLastPlayed() == null || !g.getLastPlayed().isAfter(date)) {
+        // 2) Wenn mehrere Filter kombiniert werden -> In-Memory Filterung
+        java.util.List<Game> result = new java.util.ArrayList<>();
+        for (Game g : repo.findAll()) {
+            if (title != null && (g.getTitle() == null || !g.getTitle().toLowerCase().contains(title.toLowerCase()))) {
                 continue;
             }
+            if (installed != null && (g.getInstalled() == null || !g.getInstalled().equals(installed))) {
+                continue;
+            }
+            if (minPlaytime != null && (g.getPlaytimeHours() == null || g.getPlaytimeHours() < minPlaytime)) {
+                continue;
+            }
+            if (lastPlayedAfter != null) {
+                LocalDate date = LocalDate.parse(lastPlayedAfter);
+                if (g.getLastPlayed() == null || !g.getLastPlayed().isAfter(date)) {
+                    continue;
+                }
+            }
+            result.add(g);
         }
-        result.add(g);
+        return result;
     }
-    return result;
-}
-
 
     // GET /games/{id}
     @GetMapping("/{id}")
@@ -78,12 +82,20 @@ public Iterable<Game> getAll(
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // POST /games
+    // POST /api/games
     @PostMapping
     public ResponseEntity<Game> create(@Valid @RequestBody Game game) {
         game.setId(null);
+
+        // Get current user and set userId
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = userRepository.findByUsername(username)
+                .map(user -> user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        game.setUserId(userId);
+
         Game saved = repo.save(game);
-        return ResponseEntity.created(java.net.URI.create("/games/" + saved.getId())).body(saved);
+        return ResponseEntity.created(java.net.URI.create("/api/games/" + saved.getId())).body(saved);
     }
 
     // PUT /games/{id}
@@ -95,6 +107,7 @@ public Iterable<Game> getAll(
             existing.setPlaytimeHours(game.getPlaytimeHours());
             existing.setInstalled(game.getInstalled());
             existing.setLastPlayed(game.getLastPlayed());
+            existing.setPrice(game.getPrice());
             return ResponseEntity.ok(repo.save(existing));
         }).orElse(ResponseEntity.notFound().build());
     }

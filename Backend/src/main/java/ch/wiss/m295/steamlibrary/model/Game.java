@@ -38,6 +38,9 @@ public class Game {
     @PositiveOrZero(message = "price muss >= 0 sein")
     private Double price;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     public Game() {
     }
 
@@ -104,5 +107,13 @@ public class Game {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

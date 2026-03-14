@@ -20,4 +20,6 @@ public interface GameRepository extends CrudRepository<Game, Long> {
     Iterable<Game> findByPlaytimeHoursGreaterThanEqual(Integer minPlaytimeHours);
 
     Iterable<Game> findByLastPlayedAfter(LocalDate date);
+
+    Iterable<Game> findByUserId(Long userId);
 }

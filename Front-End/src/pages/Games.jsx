@@ -145,6 +145,51 @@ export default function Games() {
     }
   }
 
+  function startCreate() {
+    setEditing({ id: null }); // Marker: neues Spiel
+    setTitle("");
+    setSteamAppId("");
+    setPlaytimeHours("");
+    setInstalled(false);
+    setLastPlayed("");
+    setErr("");
+  }
+
+  async function saveCreate() {
+    setErr("");
+
+    // minimale Validierung
+    if (!String(title).trim()) {
+      setErr("Bitte Titel ausfüllen.");
+      return;
+    }
+    if (String(steamAppId).trim() === "") {
+      setErr("Bitte SteamAppId ausfüllen.");
+      return;
+    }
+    if (String(playtimeHours).trim() === "") {
+      setErr("Bitte playtimeHours ausfüllen.");
+      return;
+    }
+
+    const payload = {
+      steamAppId: Number(steamAppId),
+      title: String(title).trim(),
+      playtimeHours: Number(playtimeHours),
+      installed: Boolean(installed),
+      lastPlayed: lastPlayed ? String(lastPlayed) : null,
+    };
+
+    try {
+      // ✅ Spring: POST /games
+      await api.createGame(payload);
+      stopEdit();
+      await load();
+    } catch (e) {
+      setErr(e?.message || e?.error || "Erstellen fehlgeschlagen");
+    }
+  }
+
   return (
     <div style={g.page}>
       <div style={g.headerRow}>
@@ -164,6 +209,14 @@ export default function Games() {
           />
 
           <button
+            onClick={startCreate}
+            style={{ ...g.btn, ...g.btnPrimary }}
+            title="Neues Game hinzufügen"
+          >
+            Neu laden
+          </button>
+
+          <button
             onClick={load}
             disabled={loading}
             style={{
@@ -172,7 +225,7 @@ export default function Games() {
             }}
             title="Liste neu vom Backend laden"
           >
-            {loading ? "Lade..." : "Neu laden"}
+            {loading ? "Lade..." : "Aktualisieren"}
           </button>
         </div>
       </div>
@@ -252,7 +305,7 @@ export default function Games() {
 
       <Modal
         open={!!editing}
-        title={editing ? `Bearbeiten: ${editing.title}` : "Bearbeiten"}
+        title={editing?.id ? `Bearbeiten: ${editing.title}` : "Neues Game"}
         onClose={stopEdit}
       >
         <div style={g.formRow}>
@@ -312,8 +365,11 @@ export default function Games() {
           <button onClick={stopEdit} style={{ ...g.btn, ...g.btnGhost }}>
             Abbrechen
           </button>
-          <button onClick={saveEdit} style={{ ...g.btn, ...g.btnPrimary }}>
-            Speichern
+          <button
+            onClick={editing?.id ? saveEdit : saveCreate}
+            style={{ ...g.btn, ...g.btnPrimary }}
+          >
+            {editing?.id ? "Speichern" : "Erstellen"}
           </button>
         </div>
       </Modal>

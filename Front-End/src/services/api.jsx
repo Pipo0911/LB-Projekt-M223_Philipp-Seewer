@@ -53,18 +53,18 @@ async function request(path, options = {}) {
 }
 
 export const api = {
-  listGames: () => request("/games"),
-  getGame: (id) => request(`/games/${encodeURIComponent(id)}`),
+  listGames: () => request("/api/games"),
+  getGame: (id) => request(`/api/games/${encodeURIComponent(id)}`),
 
   createGame: (data) =>
-    request("/games", { method: "POST", body: JSON.stringify(data) }),
+    request("/api/games", { method: "POST", body: JSON.stringify(data) }),
 
   updateGame: (id, data) =>
-    request(`/games/${encodeURIComponent(id)}`, {
+    request(`/api/games/${encodeURIComponent(id)}`, {
       method: "PUT",
       body: JSON.stringify(data),
     }),
 
   deleteGame: (id) =>
-    request(`/games/${encodeURIComponent(id)}`, { method: "DELETE" }),
+    request(`/api/games/${encodeURIComponent(id)}`, { method: "DELETE" }),
 };

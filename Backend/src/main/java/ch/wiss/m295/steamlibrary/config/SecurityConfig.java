@@ -61,10 +61,10 @@ public class SecurityConfig {
             // Zugriffs-Regeln (RBAC)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET,    "/games", "/games/**").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.POST,   "/games").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT,    "/games/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/games/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,    "/api/games", "/api/games/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers(HttpMethod.POST,   "/api/games").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT,    "/api/games/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/games/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             // JWT-Filter vor dem Standard-Auth-Filter einschalten
