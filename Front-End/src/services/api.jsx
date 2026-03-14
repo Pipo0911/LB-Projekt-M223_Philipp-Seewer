@@ -1,11 +1,23 @@
 const BASE_URL = "http://localhost:8080";
 
+/** Liest den JWT-Token aus dem localStorage (gespeichert von AuthContext). */
+function getAuthHeader() {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user?.token ? { Authorization: `Bearer ${user.token}` } : {};
+  } catch {
+    return {};
+  }
+}
+
 async function request(path, options = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
     method: options.method ?? "GET",
     headers: {
       Accept: "application/json",
       ...(options.body ? { "Content-Type": "application/json" } : {}),
+      // JWT-Token wird automatisch bei jedem Request mitgeschickt
+      ...getAuthHeader(),
       ...(options.headers || {}),
     },
     body: options.body,

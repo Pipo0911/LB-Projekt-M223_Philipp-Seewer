@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const styles = {
   page: {
@@ -18,7 +19,7 @@ const styles = {
   },
 
   title: {
-    fontSize: 48,          // weniger dominant
+    fontSize: 48,
     margin: "0 0 12px 0",
     letterSpacing: 0.4,
     fontWeight: 800,
@@ -27,6 +28,8 @@ const styles = {
   nav: {
     display: "flex",
     gap: 10,
+    alignItems: "center",
+    flexWrap: "wrap",
   },
 
   navBtn: (active) => ({
@@ -40,6 +43,28 @@ const styles = {
     transition: "background 0.15s ease, color 0.15s ease",
   }),
 
+  spacer: {
+    flex: 1,
+  },
+
+  userInfo: {
+    fontSize: 14,
+    color: "#9ca3af",
+    fontWeight: 500,
+  },
+
+  logoutBtn: {
+    padding: "7px 14px",
+    borderRadius: 12,
+    border: "1px solid #ef4444",
+    background: "transparent",
+    color: "#ef4444",
+    fontWeight: 600,
+    cursor: "pointer",
+    fontSize: 14,
+    transition: "background 0.15s ease, color 0.15s ease",
+  },
+
   card: {
     marginTop: 14,
     background: "#f8fafc",
@@ -51,6 +76,14 @@ const styles = {
 };
 
 export default function Layout({ children }) {
+  const { user, logout } = useAuth();
+  const navigate         = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <div style={styles.page}>
       <div style={styles.shell}>
@@ -61,9 +94,31 @@ export default function Layout({ children }) {
             <NavLink to="/" style={({ isActive }) => styles.navBtn(isActive)}>
               Home
             </NavLink>
-            <NavLink to="/games" style={({ isActive }) => styles.navBtn(isActive)}>
-              Games
-            </NavLink>
+
+            {user ? (
+              // Eingeloggt: Games-Link + Benutzername + Logout
+              <>
+                <NavLink to="/games" style={({ isActive }) => styles.navBtn(isActive)}>
+                  Games
+                </NavLink>
+                <div style={styles.spacer} />
+                <span style={styles.userInfo}>👤 {user.username}</span>
+                <button style={styles.logoutBtn} onClick={handleLogout}>
+                  Abmelden
+                </button>
+              </>
+            ) : (
+              // Nicht eingeloggt: Login-Link
+              <>
+                <div style={styles.spacer} />
+                <NavLink to="/login" style={({ isActive }) => styles.navBtn(isActive)}>
+                  Anmelden
+                </NavLink>
+                <NavLink to="/register" style={({ isActive }) => styles.navBtn(isActive)}>
+                  Registrieren
+                </NavLink>
+              </>
+            )}
           </nav>
         </header>
 

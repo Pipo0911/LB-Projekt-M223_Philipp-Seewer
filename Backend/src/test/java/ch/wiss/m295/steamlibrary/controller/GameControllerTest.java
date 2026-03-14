@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.*;
@@ -26,8 +27,9 @@ class GameControllerTest {
         repo.deleteAll();
     }
 
-    // UT-01: GET /games liefert 200 und Array
+    // UT-01: GET /games liefert 200 und Array (ROLE_USER reicht)
     @Test
+    @WithMockUser(roles = "USER")
     void getAll_returnsOkAndArray() throws Exception {
         mvc.perform(get("/games"))
                 .andExpect(status().isOk())
@@ -35,8 +37,9 @@ class GameControllerTest {
                 .andExpect(jsonPath("$").isArray());
     }
 
-    // UT-02: POST /games mit gültigen Daten liefert 201 und id
+    // UT-02: POST /games mit gültigen Daten liefert 201 und id (nur ADMIN)
     @Test
+    @WithMockUser(roles = "ADMIN")
     void create_validGame_returnsCreatedAndId() throws Exception {
         String body = """
                 {
@@ -56,8 +59,9 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.title").value("Helldivers 2"));
     }
 
-    // UT-03: POST /games ohne title -> 400 (Validierung)
+    // UT-03: POST /games ohne title -> 400 (Validierung, ADMIN)
     @Test
+    @WithMockUser(roles = "ADMIN")
     void create_missingTitle_returnsBadRequest() throws Exception {
         String body = """
                 {
@@ -76,6 +80,7 @@ class GameControllerTest {
 
     // UT-04: GET /games/{id} existierend -> 200
     @Test
+    @WithMockUser(roles = "USER")
     void getById_existing_returnsOk() throws Exception {
         Game g = new Game();
         g.setTitle("Test");
@@ -90,8 +95,9 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.title").value("Test"));
     }
 
-    // UT-05: DELETE /games/{id} -> 204 und danach nicht mehr vorhanden
+    // UT-05: DELETE /games/{id} -> 204 und danach nicht mehr vorhanden (nur ADMIN)
     @Test
+    @WithMockUser(roles = "ADMIN")
     void delete_existing_returnsNoContentAndRemoves() throws Exception {
         Game g = new Game();
         g.setTitle("ToDelete");
