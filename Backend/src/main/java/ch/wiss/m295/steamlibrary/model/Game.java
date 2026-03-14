@@ -35,7 +35,19 @@ public class Game {
     private Boolean installed;
     private LocalDate lastPlayed;
 
+    @PositiveOrZero(message = "price muss >= 0 sein")
+    private Double price;
+
     public Game() {
+    }
+
+    /**
+     * Convenience-Konstruktor für Unit Tests (GameService-Tests).
+     */
+    public Game(String title, double price, int playtimeHours) {
+        this.title = title;
+        this.price = price;
+        this.playtimeHours = playtimeHours;
     }
 
     public Long getId() {
@@ -84,5 +96,13 @@ public class Game {
 
     public void setLastPlayed(LocalDate lastPlayed) {
         this.lastPlayed = lastPlayed;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
