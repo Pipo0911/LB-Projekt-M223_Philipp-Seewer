@@ -1,0 +1,34 @@
+# Build artifacts
+Backend/target/
+Front-End/dist/
+Front-End/node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment
+.env
+.env.local
+
+# Dependencies
+node_modules/
+package-lock.json
+pom.xml.bak
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+.gitignore.bak
