@@ -27,17 +27,17 @@ class GameControllerTest {
         repo.deleteAll();
     }
 
-    // UT-01: GET /games liefert 200 und Array (ROLE_USER reicht)
+    // UT-01: GET /api/games liefert 200 und Array (ROLE_USER reicht)
     @Test
     @WithMockUser(roles = "USER")
     void getAll_returnsOkAndArray() throws Exception {
-        mvc.perform(get("/games"))
+        mvc.perform(get("/api/games"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray());
     }
 
-    // UT-02: POST /games mit gültigen Daten liefert 201 und id (nur ADMIN)
+    // UT-02: POST /api/games mit gültigen Daten liefert 201 und id (nur ADMIN)
     @Test
     @WithMockUser(roles = "ADMIN")
     void create_validGame_returnsCreatedAndId() throws Exception {
@@ -51,7 +51,7 @@ class GameControllerTest {
                 }
                 """;
 
-        mvc.perform(post("/games")
+        mvc.perform(post("/api/games")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isCreated())
@@ -59,7 +59,7 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.title").value("Helldivers 2"));
     }
 
-    // UT-03: POST /games ohne title -> 400 (Validierung, ADMIN)
+    // UT-03: POST /api/games ohne title -> 400 (Validierung, ADMIN)
     @Test
     @WithMockUser(roles = "ADMIN")
     void create_missingTitle_returnsBadRequest() throws Exception {
@@ -70,7 +70,7 @@ class GameControllerTest {
                 }
                 """;
 
-        mvc.perform(post("/games")
+        mvc.perform(post("/api/games")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isBadRequest())
@@ -78,7 +78,7 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.fields.title", notNullValue()));
     }
 
-    // UT-04: GET /games/{id} existierend -> 200
+    // UT-04: GET /api/games/{id} existierend -> 200
     @Test
     @WithMockUser(roles = "USER")
     void getById_existing_returnsOk() throws Exception {
@@ -89,13 +89,13 @@ class GameControllerTest {
         g.setInstalled(false);
         Game saved = repo.save(g);
 
-        mvc.perform(get("/games/" + saved.getId()))
+        mvc.perform(get("/api/games/" + saved.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(saved.getId()))
                 .andExpect(jsonPath("$.title").value("Test"));
     }
 
-    // UT-05: DELETE /games/{id} -> 204 und danach nicht mehr vorhanden (nur ADMIN)
+    // UT-05: DELETE /api/games/{id} -> 204 und danach nicht mehr vorhanden (nur ADMIN)
     @Test
     @WithMockUser(roles = "ADMIN")
     void delete_existing_returnsNoContentAndRemoves() throws Exception {
@@ -104,10 +104,10 @@ class GameControllerTest {
         g.setSteamAppId(777777);
         Game saved = repo.save(g);
 
-        mvc.perform(delete("/games/" + saved.getId()))
+        mvc.perform(delete("/api/games/" + saved.getId()))
                 .andExpect(status().isNoContent());
 
-        mvc.perform(get("/games/" + saved.getId()))
+        mvc.perform(get("/api/games/" + saved.getId()))
                 .andExpect(status().isNotFound());
     }
 }
