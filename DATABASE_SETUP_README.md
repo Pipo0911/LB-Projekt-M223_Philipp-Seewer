@@ -1,99 +1,99 @@
-# Steam Library Database Setup Guide
+# Steam Library Datenbank Setup Anleitung
 
-## Overview
-This directory contains SQL scripts to set up the complete Steam Library database for the M223 project (JWT Authentication & RBAC Implementation).
+## Übersicht
+Dieses Verzeichnis enthält SQL-Skripte zum Einrichten der kompletten Steam Library Datenbank für das M223 Projekt (JWT Authentication & RBAC Implementation).
 
-## Files
+## Dateien
 
 ### 1. `steam_library_schema.sql`
-Contains the database and table schema definitions:
-- **Database**: `steam_library`
-- **Tables**:
-  - `users` - User accounts with credentials
-  - `user_roles` - Role assignments (ROLE_USER, ROLE_ADMIN)
-  - `games` - Game records with metadata
+Enthält die Datenbankschema- und Tabellendefinitionen:
+- **Datenbank**: `steam_library`
+- **Tabellen**:
+  - `users` - Benutzerkonten mit Anmeldedaten
+  - `user_roles` - Rollenzuweisungen (ROLE_USER, ROLE_ADMIN)
+  - `games` - Spiel-Datensätze mit Metadaten
 
 ### 2. `steam_library_testdata.sql`
-Contains test data for development and demonstration:
-- **4 Test Users**: alice, bob, charlie, admin_user
-- **12 Sample Games**: 3 per user (plus 2 for admin)
-- **Role Assignments**: Users have read-only access, admin has full CRUD
+Enthält Testdaten für Entwicklung und Demonstration:
+- **4 Test-Benutzer**: alice, bob, charlie, admin_user
+- **12 Beispiel-Spiele**: 3 pro Benutzer (plus 2 für admin)
+- **Rollenzuweisungen**: Benutzer haben Lesezugriff, Admin hat volle CRUD-Rechte
 
-## Setup Instructions
+## Setup-Anleitung
 
-### Option 1: Using MySQL CLI
+### Option 1: Mit MySQL CLI
 
 ```bash
-# Connect to MySQL
+# Mit MySQL verbinden
 mysql -u root -p
 
-# Execute schema
+# Schema ausführen
 mysql -u root -p steam_library < steam_library_schema.sql
 
-# Execute test data
+# Testdaten ausführen
 mysql -u root -p steam_library < steam_library_testdata.sql
 ```
 
-### Option 2: Using MySQL Workbench
+### Option 2: Mit MySQL Workbench
 
-1. Open MySQL Workbench
-2. Create new Query tab
-3. Open and execute `steam_library_schema.sql`
-4. Open and execute `steam_library_testdata.sql`
-5. Verify in Data tables
+1. MySQL Workbench öffnen
+2. Neue Query-Registerkarte erstellen
+3. `steam_library_schema.sql` öffnen und ausführen
+4. `steam_library_testdata.sql` öffnen und ausführen
+5. In den Datentabellen überprüfen
 
-### Option 3: Using Docker
+### Option 3: Mit Docker
 
 ```bash
-# Start MySQL container
+# MySQL-Container starten
 docker run --name mysql-steam -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d mysql:8
 
-# Copy files to container
+# Dateien in Container kopieren
 docker cp steam_library_schema.sql mysql-steam:/tmp/
 docker cp steam_library_testdata.sql mysql-steam:/tmp/
 
-# Execute scripts
+# Skripte ausführen
 docker exec mysql-steam mysql -uroot -proot < /tmp/steam_library_schema.sql
 docker exec mysql-steam mysql -uroot -proot steam_library < /tmp/steam_library_testdata.sql
 ```
 
-## Test Users
+## Test-Benutzer
 
-All test users have the password: `password123`
+Alle Test-Benutzer verwenden das Passwort: `password123`
 
-| Username | Email | Role | Purpose |
+| Benutzername | Email | Rolle | Zweck |
 |----------|-------|------|---------|
-| alice | alice@test.ch | ROLE_USER | Read-only test user |
-| bob | bob@test.ch | ROLE_USER | Read-only test user |
-| charlie | charlie@test.ch | ROLE_USER | Read-only test user |
-| admin_user | admin@test.ch | ROLE_ADMIN | Administrative user |
+| alice | alice@test.ch | ROLE_USER | Lesezugriff Test-Benutzer |
+| bob | bob@test.ch | ROLE_USER | Lesezugriff Test-Benutzer |
+| charlie | charlie@test.ch | ROLE_USER | Lesezugriff Test-Benutzer |
+| admin_user | admin@test.ch | ROLE_ADMIN | Admin-Benutzer |
 
-## Sample Games
+## Beispiel-Spiele
 
-Each user has a curated set of games:
+Jeder Benutzer hat einen kuratierten Satz von Spielen:
 
-### Alice (Story/RPG Games)
-- The Witcher 3 (150 hours)
-- Cyberpunk 2077 (80 hours)
-- Portal 2 (25 hours)
+### Alice (Story/RPG Spiele)
+- The Witcher 3 (150 Stunden)
+- Cyberpunk 2077 (80 Stunden)
+- Portal 2 (25 Stunden)
 
-### Bob (Souls-like Games)
-- Elden Ring (200 hours)
-- Dark Souls 3 (120 hours)
-- Sekiro Shadows Die Twice (90 hours)
+### Bob (Souls-like Spiele)
+- Elden Ring (200 Stunden)
+- Dark Souls 3 (120 Stunden)
+- Sekiro Shadows Die Twice (90 Stunden)
 
-### Charlie (Relaxing/Long Games)
-- Valheim (300 hours)
-- Minecraft (1000 hours)
-- Stardew Valley (450 hours)
+### Charlie (Entspannende/Lang-Spiele)
+- Valheim (300 Stunden)
+- Minecraft (1000 Stunden)
+- Stardew Valley (450 Stunden)
 
-### Admin User
-- Half-Life 2 (30 hours)
-- Counter-Strike 2 (500 hours)
+### Admin-Benutzer
+- Half-Life 2 (30 Stunden)
+- Counter-Strike 2 (500 Stunden)
 
-## Database Schema Details
+## Datenbankschema Details
 
-### Users Table
+### Users Tabelle
 ```sql
 CREATE TABLE users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -105,7 +105,7 @@ CREATE TABLE users (
 );
 ```
 
-### User Roles Table
+### User Roles Tabelle
 ```sql
 CREATE TABLE user_roles (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -115,7 +115,7 @@ CREATE TABLE user_roles (
 );
 ```
 
-### Games Table
+### Games Tabelle
 ```sql
 CREATE TABLE games (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -132,35 +132,35 @@ CREATE TABLE games (
 );
 ```
 
-## Security Notes
+## Sicherheits-Hinweise
 
-- All passwords are BCrypt-hashed (10-round salt)
-- The plain password `password123` is only provided for testing purposes
-- In production, users must change their passwords after initial setup
-- Foreign key constraints prevent orphaned game records
+- Alle Passwörter sind BCrypt-gehashed (10 Runden Salz)
+- Das Passwort `password123` wird nur für Testzwecke bereitgestellt
+- In der Produktion müssen Benutzer ihre Passwörter nach dem initialen Setup ändern
+- Foreign Key Constraints verhindern verwaiste Spiel-Datensätze
 
-## Verification
+## Überprüfung
 
-After setup, verify with these queries:
+Nach dem Setup mit diesen Abfragen überprüfen:
 
 ```sql
--- Check users
+-- Benutzer überprüfen
 SELECT COUNT(*) as user_count FROM users;
 
--- Check roles
+-- Rollen überprüfen
 SELECT username, roles FROM users u
 LEFT JOIN user_roles ur ON u.id = ur.user_id;
 
--- Check games
+-- Spiele überprüfen
 SELECT u.username, COUNT(*) as game_count
 FROM games g
 JOIN users u ON g.user_id = u.id
 GROUP BY u.id;
 ```
 
-## Environment Configuration
+## Umgebungs-Konfiguration
 
-Update your Spring Boot `application.properties`:
+Spring Boot `application.properties` aktualisieren:
 
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/steam_library
@@ -171,19 +171,19 @@ spring.jpa.hibernate.ddl-auto=validate
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 ```
 
-## Cleanup
+## Bereinigung
 
-To reset the database:
+Um die Datenbank zurückzusetzen:
 
 ```bash
-# Drop the entire database
+# Gesamte Datenbank löschen
 mysql -u root -p -e "DROP DATABASE steam_library;"
 
-# Re-run the setup scripts from the beginning
+# Setup-Skripte von vorne ausführen
 ```
 
 ---
 
-**Last Updated**: 2026-03-20
-**Project**: M223 - JWT Authentication & RBAC Implementation
-**Author**: Philipp Seewer
+**Zuletzt aktualisiert**: 2026-03-20
+**Projekt**: M223 - JWT Authentication & RBAC Implementation
+**Autor**: Philipp Seewer
