@@ -371,7 +371,7 @@ Located in: `M223_Dokumentation.docx`
 ## DATEISTRUKTUR FÜR ABGABE
 
 ```
-LB-Projekt-M295_Philipp-Seewer/
+LB-Projekt-M223_Philipp-Seewer/
 ├── M223_Dokumentation.docx         ← HAUPTDOKUMENT
 ├── M223_Presentation.pptx           ← PRÄSENTATION
 ├── LIVE_DEMO_SCRIPT.md              ← DEMO-ANLEITUNG
