@@ -1,0 +1,7 @@
+Das komplette Projekt mit allen Commits und der vollständigen Entwicklungshistorie 
+ist unter folgendem GitHub-Repository verfügbar:
+
+https://github.com/Pipo0911/LB-Projekt-M223_Philipp-Seewer
+
+Der Dozent wurde als Collaborator mit Lesezugriff hinzugefügt.
+Benutzername: Sven.Schirmer@wiss-edu.ch
