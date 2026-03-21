@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M223 - Projektstruktur</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #1a73e8;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f0fe;
+        }
+
+        h3 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        /* Dateistruktur */
+        .tree {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 3px solid #1a73e8;
+            font-size: 0.95em;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .tree-item {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+
+        .folder {
+            color: #1a73e8;
+            font-weight: bold;
+        }
+
+        .file {
+            color: #333;
+        }
+
+        .comment {
+            color: #999;
+            font-style: italic;
+            margin-left: 10px;
+        }
+
+        /* Diagramme */
+        .diagram {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            border: 2px solid #e8f0fe;
+            margin: 20px 0;
+            font-family: monospace;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .box {
+            display: inline-block;
+            background: #e8f0fe;
+            border: 2px solid #1a73e8;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin: 5px;
+            color: #1a73e8;
+            font-weight: bold;
+        }
+
+        .flow {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .arrow {
+            color: #1a73e8;
+            font-size: 1.5em;
+            margin: 0 10px;
+        }
+
+        .grid-boxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .card-box {
+            background: #e8f0fe;
+            border-left: 4px solid #1a73e8;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .card-box strong {
+            color: #1a73e8;
+        }
+
+        .card-box ul {
+            list-style: none;
+            margin-top: 10px;
+            padding-left: 0;
+        }
+
+        .card-box li {
+            padding: 3px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .card-box li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: #1a73e8;
+            font-size: 0.8em;
+        }
+
+        .table-structure {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .table-structure th,
+        .table-structure td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .table-structure th {
+            background: #e8f0fe;
+            color: #1a73e8;
+            font-weight: bold;
+        }
+
+        .table-structure tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #d63384;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+        }
+
+        svg {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ M223 Projektstruktur</h1>
+
+        <!-- Ordnerstruktur -->
+        <div class="section">
+            <h2>📁 Dateistruktur</h2>
+            <div class="tree">
+                <div class="tree-item"><strong>LB-Projekt-M223_Philipp-Seewer/</strong></div>
+                <div class="tree-item" style="margin-left: 20px;"><span class="folder">📂 Backend/</span></div>
+                <div class="tree-item" style="margin-left: 40px;">📂 src/main/java/ch/wiss/m295/steamlibrary/</div>
+                <div class="tree-item" style="margin-left: 60px;">📂 auth/ <span class="comment">(JWT, Security)</span></div>
+                <div class="tree-item" style="margin-left: 80px;">AuthController.java, JwtUtil.java, JwtAuthFilter.java</div>
+                <div class="tree-item" style="margin-left: 60px;">📂 config/ <span class="comment">(Konfiguration)</span></div>
+                <div class="tree-item" style="margin-left: 80px;">SecurityConfig.java, CorsConfig.java</div>
+                <div class="tree-item" style="margin-left: 60px;">📂 controller/ <span class="comment">(REST API)</span></div>
+                <div class="tree-item" style="margin-left: 80px;">GameController.java, GlobalExceptionHandler.java</div>
+                <div class="tree-item" style="margin-left: 60px;">📂 service/ <span class="comment">(Business Logic)</span></div>
+                <div class="tree-item" style="margin-left: 80px;">GameService.java</div>
+                <div class="tree-item" style="margin-left: 60px;">📂 repository/ <span class="comment">(Data Access)</span></div>
+                <div class="tree-item" style="margin-left: 80px;">GameRepository.java, UserRepository.java</div>
+                <div class="tree-item" style="margin-left: 60px;">📂 model/ <span class="comment">(Entities)</span></div>
+                <div class="tree-item" style="margin-left: 80px;">Game.java, User.java, ERole.java</div>
+                <div class="tree-item" style="margin-left: 40px;">📂 src/test/java/ <span class="comment">(13 Tests)</span></div>
+                <div class="tree-item" style="margin-left: 60px;">GameServiceTest.java (8 Unit Tests)</div>
+                <div class="tree-item" style="margin-left: 60px;">GameControllerTest.java (5 Integration Tests)</div>
+                <div class="tree-item" style="margin-left: 20px;"><span class="folder">📂 Front-End/</span></div>
+                <div class="tree-item" style="margin-left: 40px;">📂 src/</div>
+                <div class="tree-item" style="margin-left: 60px;">📂 contexts/ <span class="comment">(Global State)</span></div>
+                <div class="tree-item" style="margin-left: 80px;">AuthContext.jsx (Login, Token Management)</div>
+                <div class="tree-item" style="margin-left: 60px;">📂 services/ <span class="comment">(API Layer)</span></div>
+                <div class="tree-item" style="margin-left: 80px;">api.jsx (JWT Injection, HTTP Requests)</div>
+                <div class="tree-item" style="margin-left: 60px;">📂 components/ <span class="comment">(UI)</span></div>
+                <div class="tree-item" style="margin-left: 80px;">PrivateRoute.jsx (Route Protection)</div>
+                <div class="tree-item" style="margin-left: 60px;">📂 pages/ <span class="comment">(Views)</span></div>
+                <div class="tree-item" style="margin-left: 80px;">Login.jsx, Games.jsx, Home.jsx, Register.jsx</div>
+                <div class="tree-item" style="margin-left: 40px;">App.jsx (Routing), main.jsx (Entry Point)</div>
+                <div class="tree-item" style="margin-left: 20px;"><span class="folder">📂 Dokumentation/</span></div>
+                <div class="tree-item" style="margin-left: 40px;">M223_Dokumentation.docx (11 Kapitel)</div>
+                <div class="tree-item" style="margin-left: 40px;">DATABASE_SETUP_README.md</div>
+                <div class="tree-item" style="margin-left: 40px;">LIVE_DEMO_SCRIPT.md</div>
+                <div class="tree-item" style="margin-left: 20px;"><span class="folder">📂 .git/</span> <span class="comment">(19 Commits)</span></div>
+            </div>
+        </div>
+
+        <!-- Architektur-Diagramm -->
+        <div class="section">
+            <h2>🏛️ Architektur</h2>
+            <div class="diagram">
+                <div class="flow">
+                    <div class="box">React Frontend<br>(Port 5173)</div>
+                    <div class="arrow">←→</div>
+                    <div class="box">REST API<br>(Spring Boot)<br>(Port 8080)</div>
+                    <div class="arrow">←→</div>
+                    <div class="box">MySQL Database<br>(steam_library)</div>
+                </div>
+                <br><br>
+                <strong>Frontend-Stack:</strong> React 18 → Context API → api.jsx (HTTP) → Browser localStorage (JWT)<br>
+                <strong>Backend-Stack:</strong> Controller → Service → Repository → JPA/Hibernate → MySQL<br>
+                <strong>Security:</strong> JwtUtil (Token Gen) → JwtAuthFilter (Token Validation) → SecurityConfig (RBAC)
+            </div>
+        </div>
+
+        <!-- API Endpoints -->
+        <div class="section">
+            <h2>📡 REST API Struktur</h2>
+            <table class="table-structure">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Endpoint</th>
+                        <th>Authentifizierung</th>
+                        <th>Autorisierung</th>
+                        <th>Response</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>POST</strong></td>
+                        <td><code>/api/auth/signup</code></td>
+                        <td>❌ Öffentlich</td>
+                        <td>-</td>
+                        <td>200 (Success Message)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>POST</strong></td>
+                        <td><code>/api/auth/signin</code></td>
+                        <td>❌ Öffentlich</td>
+                        <td>-</td>
+                        <td>200 (JWT Token)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GET</strong></td>
+                        <td><code>/api/games</code></td>
+                        <td>✅ JWT erforderlich</td>
+                        <td>USER, ADMIN</td>
+                        <td>200 (Array)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GET</strong></td>
+                        <td><code>/api/games/{id}</code></td>
+                        <td>✅ JWT erforderlich</td>
+                        <td>USER, ADMIN</td>
+                        <td>200 (Game) / 404</td>
+                    </tr>
+                    <tr>
+                        <td><strong>POST</strong></td>
+                        <td><code>/api/games</code></td>
+                        <td>✅ JWT erforderlich</td>
+                        <td>ADMIN</td>
+                        <td>201 (Created) / 403</td>
+                    </tr>
+                    <tr>
+                        <td><strong>PUT</strong></td>
+                        <td><code>/api/games/{id}</code></td>
+                        <td>✅ JWT erforderlich</td>
+                        <td>ADMIN</td>
+                        <td>200 (Updated) / 403</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DELETE</strong></td>
+                        <td><code>/api/games/{id}</code></td>
+                        <td>✅ JWT erforderlich</td>
+                        <td>ADMIN</td>
+                        <td>204 (No Content) / 403</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Datenbank-Struktur -->
+        <div class="section">
+            <h2>🗄️ Datenbankstruktur</h2>
+            <div class="grid-boxes">
+                <div class="card-box">
+                    <strong>users</strong>
+                    <ul>
+                        <li>id (PK, BIGINT)</li>
+                        <li>username (VARCHAR, UNIQUE)</li>
+                        <li>email (VARCHAR, UNIQUE)</li>
+                        <li>password (VARCHAR, BCrypt)</li>
+                        <li>created_at, updated_at</li>
+                    </ul>
+                </div>
+                <div class="card-box">
+                    <strong>user_roles</strong>
+                    <ul>
+                        <li>id (PK, BIGINT)</li>
+                        <li>user_id (FK → users)</li>
+                        <li>role (VARCHAR)</li>
+                        <li>Werte: ROLE_USER, ROLE_ADMIN</li>
+                    </ul>
+                </div>
+                <div class="card-box">
+                    <strong>games</strong>
+                    <ul>
+                        <li>id (PK, BIGINT)</li>
+                        <li>user_id (FK → users)</li>
+                        <li>title (VARCHAR, NOT NULL)</li>
+                        <li>steam_app_id (INT, UNIQUE)</li>
+                        <li>playtime_hours, installed</li>
+                        <li>price, last_played</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="diagram">
+                <strong>Relationships:</strong><br>
+                users (1) ←→ (n) user_roles<br>
+                users (1) ←→ (n) games<br>
+                <span style="color: #666; font-size: 0.9em;">ON DELETE CASCADE für Datenkonsistenz</span>
+            </div>
+        </div>
+
+        <!-- Authentifizierungs-Flow -->
+        <div class="section">
+            <h2>🔐 Authentifizierungs-Flow</h2>
+            <div class="diagram">
+                <strong>1. Registrierung:</strong><br>
+                Frontend: POST /api/auth/signup → Backend: Password hashen (BCrypt)<br>
+                → User + Role speichern → 200 Success<br><br>
+
+                <strong>2. Login:</strong><br>
+                Frontend: POST /api/auth/signin → Backend: Credentials verifizieren<br>
+                → JWT generieren (HMAC-SHA256, 24h) → Return Token + User Data<br><br>
+
+                <strong>3. Authenticated Requests:</strong><br>
+                Frontend: localStorage.getItem('user.token')<br>
+                → Authorization Header: "Bearer &lt;token&gt;"<br>
+                → JwtAuthFilter validiert Token<br>
+                → SecurityContext setzt User + Roles<br>
+                → Controller prüft @PreAuthorize(hasRole('ADMIN'))<br><br>
+
+                <strong>4. Token Struktur:</strong><br>
+                Header: HMAC-SHA256<br>
+                Payload: { sub: "username", iat: 1234567890, exp: 1234567890, roles: "ROLE_USER" }<br>
+                Signature: Secret Key (app.jwt.secret)
+            </div>
+        </div>
+
+        <!-- RBAC Matrix -->
+        <div class="section">
+            <h2>🛡️ RBAC (Role-Based Access Control)</h2>
+            <table class="table-structure">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Endpoint</th>
+                        <th>ROLE_USER</th>
+                        <th>ROLE_ADMIN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Spiele anzeigen</td>
+                        <td>GET /api/games</td>
+                        <td>✅</td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>Spiel Details</td>
+                        <td>GET /api/games/{id}</td>
+                        <td>✅</td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>Spiel erstellen</td>
+                        <td>POST /api/games</td>
+                        <td>❌ 403</td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>Spiel ändern</td>
+                        <td>PUT /api/games/{id}</td>
+                        <td>❌ 403</td>
+                        <td>✅</td>
+                    </tr>
+                    <tr>
+                        <td>Spiel löschen</td>
+                        <td>DELETE /api/games/{id}</td>
+                        <td>❌ 403</td>
+                        <td>✅</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Test-Struktur -->
+        <div class="section">
+            <h2>🧪 Test-Struktur</h2>
+            <div class="grid-boxes">
+                <div class="card-box">
+                    <strong>Unit Tests (8/8)</strong>
+                    <ul>
+                        <li>GameService Methoden</li>
+                        <li>Validierung (Title, Price)</li>
+                        <li>Filterung & Suche</li>
+                        <li>In-Memory Daten</li>
+                    </ul>
+                </div>
+                <div class="card-box">
+                    <strong>Integration Tests (5/5)</strong>
+                    <ul>
+                        <li>REST Endpoints</li>
+                        <li>HTTP Status Codes</li>
+                        <li>Authentication (@WithMockUser)</li>
+                        <li>RBAC Validierung</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="highlight">
+                <strong>✅ 13/13 Tests bestanden (100%)</strong><br>
+                Coverage: Alle 5 Endpoints, Alle CRUD-Operationen, Alle Rollen
+            </div>
+        </div>
+
+        <!-- Security-Schichten -->
+        <div class="section">
+            <h2>🔒 Security-Schichten</h2>
+            <div class="diagram">
+                <strong>Layer 1 - Frontend:</strong> Input Validation, localStorage (secure token storage)<br><br>
+                <strong>Layer 2 - Transport:</strong> CORS (nur localhost:5173), HTTPS ready<br><br>
+                <strong>Layer 3 - Authentication:</strong> JWT (HMAC-SHA256), Token Validation<br><br>
+                <strong>Layer 4 - Authorization:</strong> RBAC (Spring Security), @PreAuthorize<br><br>
+                <strong>Layer 5 - Daten:</strong> Password Hashing (BCrypt), SQL Injection Prevention (JPA)
+            </div>
+        </div>
+
+        <!-- Deployment -->
+        <div class="section">
+            <h2>🚀 Deployment-Struktur</h2>
+            <div class="diagram">
+                <strong>Local Development:</strong><br>
+                Frontend: npm run dev → http://localhost:5173<br>
+                Backend: mvn spring-boot:run → http://localhost:8080<br>
+                Database: MySQL local → localhost:3306<br><br>
+
+                <strong>Production Ready:</strong><br>
+                Frontend: npm run build → dist/SPA<br>
+                Backend: mvn clean package → target/steamlibrary.jar<br>
+                Database: MySQL Server (external)
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
