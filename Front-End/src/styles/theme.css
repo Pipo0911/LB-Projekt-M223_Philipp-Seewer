@@ -1,0 +1,52 @@
+/* =====================================================================
+   Globale Design-Tokens & Reset – Steam Library (M223)
+   Zentrale Farben/Radien als CSS-Variablen; ersetzt die zuvor in den
+   Komponenten verstreuten Inline-Style-Werte.
+   ===================================================================== */
+:root {
+  /* Farben */
+  --color-page: #1f1f1f;
+  --color-page-text: #eaeaea;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-border: #e5e7eb;
+  --color-border-strong: #cbd5e1;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-primary: #0f172a;
+  --color-accent: #1a73e8;
+  --color-success: #16a34a;
+  --color-danger: #ef4444;
+  --color-danger-text: #b91c1c;
+  --color-danger-bg: #fee2e2;
+  --color-danger-border: #fca5a5;
+  --color-success-bg: #dcfce7;
+  --color-success-text: #15803d;
+
+  /* Radien */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+body {
+  background: var(--color-page);
+  color: var(--color-page-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

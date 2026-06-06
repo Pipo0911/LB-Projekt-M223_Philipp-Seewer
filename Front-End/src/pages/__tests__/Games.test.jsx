@@ -2,70 +2,75 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Games from "../Games";
 
+// Echter API-Client wird gemockt (Methoden entsprechen services/api.js).
 vi.mock("../../services/api", () => ({
   api: {
     listGames: vi.fn(),
-    patchGame: vi.fn(),
-    deleteGame: vi.fn()
-  }
+    createGame: vi.fn(),
+    updateGame: vi.fn(),
+    deleteGame: vi.fn(),
+  },
 }));
 
 import { api } from "../../services/api";
 
 const sample = [
-  { appid: 10, name: "Half-Life", hours: 12.3, icon: null, header: null, status: null, note: null },
-  { appid: 20, name: "Portal", hours: 4.1, icon: null, header: null, status: "backlog", note: "spÃ¤ter" }
+  {
+    id: 1,
+    title: "Half-Life",
+    steamAppId: 70,
+    playtimeHours: 12,
+    installed: true,
+    lastPlayed: "2024-01-01",
+  },
+  { id: 2, title: "Portal", steamAppId: 400, playtimeHours: 4, installed: false, lastPlayed: null },
 ];
 
-test("Games lÃ¤dt und zeigt Liste", async () => {
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+test("Games lädt und zeigt die Liste", async () => {
   api.listGames.mockResolvedValueOnce(sample);
 
   render(<Games />);
+
   expect(await screen.findByText("Half-Life")).toBeInTheDocument();
   expect(screen.getByText("Portal")).toBeInTheDocument();
 });
 
-test("Games: Bearbeiten -> Speichern ruft patchGame auf", async () => {
+test("Bearbeiten → Speichern ruft updateGame auf", async () => {
   api.listGames.mockResolvedValueOnce(sample);
-  api.patchGame.mockResolvedValueOnce({ ok: true });
-  // reload after save
-  api.listGames.mockResolvedValueOnce([
-    { ...sample[0], status: "playing", note: "now" },
-    sample[1]
-  ]);
+  api.updateGame.mockResolvedValueOnce({ ok: true });
+  api.listGames.mockResolvedValueOnce(sample); // Neuladen nach dem Speichern
 
   render(<Games />);
 
-  const row = await screen.findByText("Half-Life");
-  const tr = row.closest("tr");
+  const row = (await screen.findByText("Half-Life")).closest("tr");
+  await userEvent.click(within(row).getByRole("button", { name: /bearbeiten/i }));
 
-  await userEvent.click(within(tr).getByRole("button", { name: /bearbeiten/i }));
-
-  const statusInput = screen.getByPlaceholderText(/backlog/i);
-  const noteInput = screen.getByPlaceholderText(/max 500/i);
-
-  await userEvent.clear(statusInput);
-  await userEvent.type(statusInput, "playing");
-  await userEvent.clear(noteInput);
-  await userEvent.type(noteInput, "now");
+  const titleInput = screen.getByDisplayValue("Half-Life");
+  await userEvent.clear(titleInput);
+  await userEvent.type(titleInput, "Half-Life 2");
 
   await userEvent.click(screen.getByRole("button", { name: /speichern/i }));
 
-  expect(api.patchGame).toHaveBeenCalledWith(10, { status: "playing", note: "now" });
+  expect(api.updateGame).toHaveBeenCalledWith(
+    1,
+    expect.objectContaining({ title: "Half-Life 2", steamAppId: 70 })
+  );
 });
 
-test("Games: LÃ¶schen entfernt Game aus UI und ruft deleteGame auf", async () => {
+test("Löschen entfernt das Game und ruft deleteGame auf", async () => {
   api.listGames.mockResolvedValueOnce(sample);
   api.deleteGame.mockResolvedValueOnce({ ok: true });
   window.confirm = vi.fn(() => true);
 
   render(<Games />);
 
-  const row = await screen.findByText("Portal");
-  const tr = row.closest("tr");
+  const row = (await screen.findByText("Portal")).closest("tr");
+  await userEvent.click(within(row).getByRole("button", { name: /löschen/i }));
 
-  await userEvent.click(within(tr).getByRole("button", { name: /lÃ¶schen/i }));
-
-  expect(api.deleteGame).toHaveBeenCalledWith(20);
+  expect(api.deleteGame).toHaveBeenCalledWith(2);
   expect(screen.queryByText("Portal")).not.toBeInTheDocument();
 });

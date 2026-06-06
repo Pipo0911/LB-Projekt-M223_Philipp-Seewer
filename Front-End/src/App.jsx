@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import ErrorBoundary from "./components/ErrorBoundary";
 import PrivateRoute from "./components/PrivateRoute";
 import Layout from "./ui/Layout";
 import Home from "./pages/Home";
@@ -9,25 +10,27 @@ import Register from "./pages/Register";
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Layout>
-        <Routes>
-          {/* Öffentliche Routen */}
-          <Route path="/"         element={<Home />} />
-          <Route path="/login"    element={<Login />} />
-          <Route path="/register" element={<Register />} />
+    <ErrorBoundary>
+      <AuthProvider>
+        <Layout>
+          <Routes>
+            {/* Öffentliche Routen */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* Geschützte Route – nur für eingeloggte Benutzer */}
-          <Route
-            path="/games"
-            element={
-              <PrivateRoute>
-                <Games />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </Layout>
-    </AuthProvider>
+            {/* Geschützte Route – nur für eingeloggte Benutzer */}
+            <Route
+              path="/games"
+              element={
+                <PrivateRoute>
+                  <Games />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </Layout>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
