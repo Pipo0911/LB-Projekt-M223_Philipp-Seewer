@@ -11,9 +11,11 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn -B dependency:go-offline
 
-# 2) Quellcode kopieren, testen und bauen (Tests laufen hermetisch gegen H2).
+# 2) Quellcode kopieren und bauen. Die Tests werden NICHT hier ausgefuehrt,
+#    sondern in der CI-Pipeline (GitHub Actions). Das haelt den Image-Build
+#    schnell und vermeidet doppelte Testlaeufe.
 COPY src ./src
-RUN mvn -B clean test package
+RUN mvn -B clean package -DskipTests
 
 # --- Runtime-Stage ---
 FROM eclipse-temurin:21-jre

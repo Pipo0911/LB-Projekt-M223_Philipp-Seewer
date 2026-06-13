@@ -1,0 +1,89 @@
+# =====================================================================
+# Continuous Integration – Steam Library (M223 / M210)
+# ---------------------------------------------------------------------
+# Laeuft automatisch bei jedem Push und Pull Request auf einem neutralen
+# Ubuntu-Server. So ist sichergestellt, dass die Tests in einer immer
+# gleichen Umgebung laufen ("Auf meinem Rechner laeuft es" gibt es nicht
+# mehr) und Fehler VOR dem Merge sichtbar werden.
+#
+# Zwei unabhaengige Jobs:
+#   1) backend  – Maven: JUnit-Unit-Tests + MockMvc-Integrationstests,
+#                 danach Build des .jar als Artefakt.
+#   2) frontend – Vitest-Tests + Produktions-Build.
+#
+# Hinweis: Die Integrationstests laufen hermetisch gegen eine In-Memory-DB
+# (H2), daher wird in der CI KEIN MySQL-Server benoetigt.
+# =====================================================================
+
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  # -------------------------------------------------------------------
+  # Backend: Tests + Build
+  # -------------------------------------------------------------------
+  backend:
+    name: Backend (Maven · Tests + Build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: JDK 21 einrichten (Temurin) + Maven-Cache
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Tests ausfuehren (JUnit + MockMvc gegen H2)
+        run: mvn -B clean test
+
+      - name: JAR bauen (Tests bereits gelaufen)
+        run: mvn -B package -DskipTests
+
+      - name: Build-Artefakt (.jar) speichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: steam-library-jar
+          path: Backend/target/*.jar
+          if-no-files-found: error
+          retention-days: 7
+
+  # -------------------------------------------------------------------
+  # Frontend: Tests + Build
+  # -------------------------------------------------------------------
+  frontend:
+    name: Frontend (Vitest · Tests + Build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Front-End
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Node.js 22 einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # package-lock.json ist in .gitignore -> npm install statt npm ci.
+      - name: Abhaengigkeiten installieren
+        run: npm install
+
+      - name: Tests ausfuehren (Vitest)
+        run: npm run test
+
+      - name: Produktions-Build
+        run: npm run build
