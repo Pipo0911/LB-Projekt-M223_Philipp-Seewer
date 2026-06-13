@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Modul 210 – CI/CD Zusammenfassung</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 16mm 18mm 16mm;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: #1f2933;
+    line-height: 1.55;
+    font-size: 11pt;
+    margin: 0;
+  }
+
+  /* ---- Titelkopf ---- */
+  .cover {
+    border-left: 6px solid #2b6cb0;
+    padding: 4px 0 4px 18px;
+    margin-bottom: 26px;
+  }
+  .cover .kicker {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 9pt;
+    color: #2b6cb0;
+    font-weight: 700;
+    margin: 0;
+  }
+  .cover h1 {
+    font-size: 24pt;
+    margin: 4px 0 2px;
+    color: #102a43;
+  }
+  .cover .subtitle {
+    font-size: 12pt;
+    color: #486581;
+    margin: 0 0 10px;
+  }
+  .cover .meta {
+    font-size: 9.5pt;
+    color: #627d98;
+  }
+  .cover .meta span { margin-right: 18px; }
+
+  /* ---- Überschriften ---- */
+  h2 {
+    font-size: 14.5pt;
+    color: #102a43;
+    border-bottom: 2px solid #d9e2ec;
+    padding-bottom: 5px;
+    margin-top: 26px;
+    margin-bottom: 12px;
+  }
+  h2 .num {
+    display: inline-block;
+    background: #2b6cb0;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 10pt;
+    padding: 1px 9px;
+    margin-right: 9px;
+    vertical-align: middle;
+  }
+  h3 {
+    font-size: 11.5pt;
+    color: #243b53;
+    margin: 16px 0 6px;
+  }
+  p { margin: 6px 0; }
+
+  /* ---- Boxen ---- */
+  .why {
+    background: #ebf8ff;
+    border: 1px solid #bee3f8;
+    border-left: 4px solid #3182ce;
+    border-radius: 4px;
+    padding: 9px 14px;
+    margin: 10px 0;
+    font-size: 10.5pt;
+  }
+  .why b { color: #2c5282; }
+  .done {
+    background: #f0fff4;
+    border: 1px solid #c6f6d5;
+    border-left: 4px solid #38a169;
+    border-radius: 4px;
+    padding: 9px 14px;
+    margin: 10px 0;
+    font-size: 10.5pt;
+  }
+  .todo {
+    background: #fffaf0;
+    border: 1px solid #feebc8;
+    border-left: 4px solid #dd6b20;
+    border-radius: 4px;
+    padding: 9px 14px;
+    margin: 10px 0;
+    font-size: 10.5pt;
+  }
+
+  /* ---- Tabellen ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 10pt;
+  }
+  th {
+    background: #334e68;
+    color: #fff;
+    text-align: left;
+    padding: 7px 10px;
+    font-weight: 600;
+  }
+  td {
+    border: 1px solid #d9e2ec;
+    padding: 6px 10px;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f0f4f8; }
+
+  /* ---- Code ---- */
+  code {
+    background: #edf2f7;
+    color: #2d3748;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 9.5pt;
+  }
+  pre {
+    background: #1f2933;
+    color: #e4ecf5;
+    padding: 12px 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 9pt;
+    line-height: 1.45;
+    margin: 10px 0;
+  }
+  pre .c { color: #8aa0b6; }
+  pre .k { color: #7fd1ff; }
+  pre .s { color: #b5e8a0; }
+
+  ul { margin: 6px 0; padding-left: 22px; }
+  li { margin: 3px 0; }
+
+  .step {
+    display: flex;
+    align-items: baseline;
+    margin: 8px 0;
+  }
+  .step .n {
+    flex: 0 0 26px;
+    height: 26px;
+    width: 26px;
+    background: #2b6cb0;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 26px;
+    font-weight: 700;
+    font-size: 10pt;
+    margin-right: 12px;
+  }
+  .step .t { flex: 1; }
+
+  footer {
+    margin-top: 30px;
+    border-top: 1px solid #d9e2ec;
+    padding-top: 8px;
+    font-size: 8.5pt;
+    color: #829ab1;
+    text-align: center;
+  }
+  .avoid-break { page-break-inside: avoid; }
+</style>
+</head>
+<body>
+
+  <div class="cover">
+    <p class="kicker">Modul 210 · Public Cloud für Anwendungen nutzen</p>
+    <h1>CI/CD mit GitHub Actions</h1>
+    <p class="subtitle">Branches, Pull-Requests &amp; eine automatisierte Build-/Test-Pipeline</p>
+    <p class="meta">
+      <span><b>Autor:</b> Philipp Seewer</span>
+      <span><b>Schule:</b> WISS</span>
+      <span><b>Projekt:</b> Steam Library (M223)</span>
+      <span><b>Datum:</b> 13.06.2026</span>
+    </p>
+  </div>
+
+  <h2><span class="num">1</span>Worum geht es?</h2>
+  <p>
+    Im Modul 210 lernen wir, <b>wie professionelle Software-Teams arbeiten</b>. Statt Code
+    direkt in den Hauptstand zu schreiben und zu hoffen, dass alles funktioniert, nutzt man
+    zwei Werkzeuge, die zusammenspielen:
+  </p>
+  <ul>
+    <li><b>Branches &amp; Pull-Requests</b> – damit der Hauptstand (<code>main</code>) immer stabil bleibt.</li>
+    <li><b>GitHub Actions</b> – eine Pipeline, die bei jedem Push automatisch testet und baut.</li>
+  </ul>
+  <p>
+    Ziel dieser Zusammenfassung: erklären, <b>was</b> die Aufgaben sind, <b>warum</b> man das so macht
+    und <b>was wir konkret umgesetzt haben</b>.
+  </p>
+
+  <h2><span class="num">2</span>Aufgabe 1 – Branches &amp; Pull-Requests</h2>
+  <p>
+    Ein <b>Branch</b> ist ein „Seitenast" des Projekts. Man arbeitet darin an einer Änderung,
+    ohne den Hauptstand <code>main</code> anzufassen. Ist die Änderung fertig, stellt man einen
+    <b>Pull-Request</b> (PR): eine Anfrage, die Änderungen aus dem Branch in <code>main</code> zu
+    übernehmen. Der PR kann vorher geprüft, getestet und besprochen werden – erst dann wird
+    <b>gemergt</b> (zusammengeführt).
+  </p>
+  <div class="why">
+    <b>Warum so?</b> Direkt in <code>main</code> zu pushen ist nur für sehr kleine Projekte okay.
+    Mit Branches &amp; Pull-Requests bleibt <code>main</code> <b>immer einsatzfähig (deploybar)</b> –
+    nichts Ungetestetes landet im Hauptstand.
+  </div>
+  <p>Der typische Ablauf (genau so haben wir es gemacht):</p>
+  <pre><span class="c"># 1) Eigenen Branch erstellen und hineinwechseln</span>
+git checkout -b ci/github-actions
+
+<span class="c"># 2) Änderungen committen</span>
+git commit -m <span class="s">"ci: GitHub Actions Workflow ..."</span>
+
+<span class="c"># 3) Branch online stellen (push)</span>
+git push -u origin ci/github-actions
+
+<span class="c"># 4) Pull-Request auf GitHub öffnen und nach Prüfung mergen</span></pre>
+
+  <h2><span class="num">3</span>Aufgabe 2 – GitHub Actions (CI/CD)</h2>
+  <p>
+    <b>GitHub Actions</b> ist eine automatische Pipeline. Sie wird durch eine <code>.yml</code>-Datei
+    im Ordner <code>.github/workflows/</code> gesteuert und läuft <b>bei jedem Push und Pull-Request</b>
+    auf einem neutralen Linux-Server (Ubuntu) bei GitHub. Sie übernimmt drei Dinge:
+  </p>
+  <ul>
+    <li><b>Testen</b> – alle automatischen Tests laufen automatisch.</li>
+    <li><b>Bauen</b> – das Projekt wird kompiliert/gebaut.</li>
+    <li><b>Artefakt speichern</b> – das fertige Programm (die <code>.jar</code>-Datei) wird abgelegt.</li>
+  </ul>
+  <div class="why">
+    <b>Warum so?</b> Fehler werden sofort sichtbar – <b>bevor</b> gemergt wird. Und weil immer dieselbe
+    Server-Umgebung verwendet wird, gibt es kein „Auf meinem Rechner lief es aber!" mehr.
+  </div>
+
+  <h2><span class="num">4</span>Unsere Umsetzung</h2>
+
+  <h3>4.1 Die Pipeline – <code>.github/workflows/ci.yml</code></h3>
+  <p>Eine Workflow-Datei mit zwei unabhängigen Jobs, die parallel laufen:</p>
+  <table class="avoid-break">
+    <tr><th style="width:26%">Job</th><th>Was er tut</th></tr>
+    <tr>
+      <td><b>backend</b><br>(Maven)</td>
+      <td>JDK&nbsp;21 (Temurin) einrichten &rarr; <code>mvn clean test</code> (JUnit + MockMvc) &rarr;
+          <code>mvn package -DskipTests</code> &rarr; die <code>.jar</code> als <b>Artefakt</b> hochladen.</td>
+    </tr>
+    <tr>
+      <td><b>frontend</b><br>(Vitest)</td>
+      <td>Node.js&nbsp;22 einrichten &rarr; <code>npm install</code> &rarr; <code>npm run test</code>
+          (Vitest) &rarr; <code>npm run build</code>.</td>
+    </tr>
+  </table>
+  <div class="why">
+    <b>Zwei Besonderheiten unseres Projekts:</b> (1)&nbsp;Die Integrationstests laufen hermetisch gegen
+    eine In-Memory-Datenbank (<b>H2</b>) – darum braucht die CI <b>kein MySQL</b>.
+    (2)&nbsp;Wir verwenden <code>npm install</code> statt <code>npm ci</code>, weil das
+    <code>package-lock.json</code> in <code>.gitignore</code> steht (und <code>npm ci</code> ein Lockfile bräuchte).
+  </div>
+
+  <h3>4.2 Anpassung am Dockerfile</h3>
+  <p>
+    Vorher hat der Docker-Image-Build die Tests selbst ausgeführt
+    (<code>mvn clean test package</code>). Das haben wir geändert auf:
+  </p>
+  <pre>RUN mvn -B clean package -DskipTests</pre>
+  <div class="why">
+    <b>Warum?</b> Die Tests laufen jetzt in der CI-Pipeline. Sie im Image-Build zu wiederholen wäre
+    doppelte Arbeit und würde den Build unnötig verlangsamen.
+  </div>
+
+  <h3>4.3 Branch, Commit &amp; Push</h3>
+  <p>
+    Beide Dateien (<code>ci.yml</code> neu, <code>Dockerfile</code> geändert) wurden auf dem Branch
+    <code>ci/github-actions</code> committet und zu GitHub gepusht – also <b>nicht</b> direkt in
+    <code>main</code>, genau wie es die Methode vorsieht.
+  </p>
+
+  <h3>4.4 Lokale Verifikation</h3>
+  <table class="avoid-break">
+    <tr><th style="width:26%">Bereich</th><th>Ergebnis</th></tr>
+    <tr><td><b>Backend</b></td>
+        <td>✅ <b>16 Tests grün</b> (8 GameService · 3 GameLibraryService/Mockito · 5 GameController/MockMvc).</td></tr>
+    <tr><td><b>Frontend</b></td>
+        <td>⚠️ Lokal nicht ausführbar (<code>esbuild</code>-Problem unter OneDrive/Windows). Kein CI-Problem –
+            der Linux-Server der Pipeline lädt die passende Binärdatei frisch.</td></tr>
+  </table>
+
+  <h2><span class="num">5</span>Zuordnung zu den Lehr-Folien</h2>
+  <table class="avoid-break">
+    <tr><th style="width:14%">Folie</th><th>Lehr-Inhalt</th><th style="width:34%">In unserer <code>ci.yml</code></th></tr>
+    <tr><td>15</td><td>Java CI mit Maven (setup-java, JDK 21, Cache, <code>mvn test</code>)</td><td>Job <b>backend</b></td></tr>
+    <tr><td>16</td><td>Build-Artefakt (<code>package</code> + <code>upload-artifact</code>)</td><td>Schritte „JAR bauen" + „Artefakt speichern"</td></tr>
+    <tr><td>17</td><td>Frontend Node.js CI (setup-node, build, test)</td><td>Job <b>frontend</b></td></tr>
+    <tr><td>9–13</td><td>Branch &rarr; Push &rarr; Pull-Request &rarr; Merge</td><td>Branch + Push erledigt; PR folgt</td></tr>
+  </table>
+
+  <h2><span class="num">6</span>Der letzte Schritt: Pull-Request mergen</h2>
+  <p>Damit der professionelle Ablauf vollständig ist, fehlt nur noch das Mergen im Browser:</p>
+  <div class="step"><div class="n">1</div><div class="t"><b>Pull-Request öffnen</b> – auf GitHub Base <code>main</code> &larr; Compare <code>ci/github-actions</code>.</div></div>
+  <div class="step"><div class="n">2</div><div class="t"><b>CI abwarten</b> – im PR erscheinen die Checks <b>backend</b> und <b>frontend</b>; warten bis beide grün sind.</div></div>
+  <div class="step"><div class="n">3</div><div class="t"><b>Mergen</b> – „Merge pull request" &rarr; „Confirm". Die Änderungen sind nun in <code>main</code>.</div></div>
+  <div class="done">
+    <b>Ergebnis:</b> Mit dem Merge sind <b>beide Modul-Themen in einem Workflow demonstriert</b> –
+    Branch/Pull-Request (Block&nbsp;3) und die automatische GitHub-Actions-Pipeline (Block&nbsp;4).
+    Der <code>main</code>-Branch bleibt dabei jederzeit einsatzfähig.
+  </div>
+
+  <h2><span class="num">7</span>Begriffe kurz erklärt</h2>
+  <table class="avoid-break">
+    <tr><th style="width:24%">Begriff</th><th>Bedeutung</th></tr>
+    <tr><td><b>CI/CD</b></td><td>Continuous Integration / Continuous Delivery – automatisches Testen &amp; Bauen bei jeder Änderung.</td></tr>
+    <tr><td><b>Branch</b></td><td>Ein paralleler Entwicklungsstand neben <code>main</code>.</td></tr>
+    <tr><td><b>Pull-Request</b></td><td>Anfrage, Änderungen eines Branches in einen anderen (meist <code>main</code>) zu übernehmen.</td></tr>
+    <tr><td><b>Merge</b></td><td>Das Zusammenführen der Änderungen in den Zielbranch.</td></tr>
+    <tr><td><b>Workflow / Action</b></td><td>Die <code>.yml</code>-Datei bzw. die automatischen Schritte der Pipeline.</td></tr>
+    <tr><td><b>Job</b></td><td>Ein in sich abgeschlossener Teil der Pipeline (z.&nbsp;B. „backend").</td></tr>
+    <tr><td><b>Artefakt</b></td><td>Das gebaute Ergebnis (z.&nbsp;B. die <code>.jar</code>-Datei), das gespeichert wird.</td></tr>
+    <tr><td><b>Runner</b></td><td>Der Server, auf dem die Pipeline läuft (hier: Ubuntu bei GitHub).</td></tr>
+  </table>
+
+  <footer>
+    Modul 210 – CI/CD mit GitHub Actions · Steam Library (M223) · Philipp Seewer, WISS · 13.06.2026
+  </footer>
+
+</body>
+</html>
