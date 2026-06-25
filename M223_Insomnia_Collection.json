@@ -1,0 +1,307 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-06-25T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v8",
+  "resources": [
+    {
+      "_id": "wrk_m223_steam",
+      "_type": "workspace",
+      "parentId": null,
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "M223 Steam Library – Demo",
+      "description": "Fachgespraech-Demo: Registrierung, Login, geschuetzter Zugriff (RBAC). Ablauf: 1) signup admin+user  2) signin -> Token kopieren -> in Umgebung (admin_token / user_token) einfuegen  3) Games-Requests durchspielen.",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_m223_base",
+      "_type": "environment",
+      "parentId": "wrk_m223_steam",
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:8080",
+        "admin_token": "HIER_ADMIN_TOKEN_EINFUEGEN",
+        "user_token": "HIER_USER_TOKEN_EINFUEGEN"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "admin_token",
+          "user_token"
+        ]
+      },
+      "color": "#2563eb",
+      "isPrivate": false,
+      "metaSortKey": 1782391915000
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_m223_steam",
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "1 · Auth (Registrierung & Login)",
+      "description": "",
+      "environment": {},
+      "metaSortKey": -100
+    },
+    {
+      "_id": "fld_games",
+      "_type": "request_group",
+      "parentId": "wrk_m223_steam",
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "2 · Games (geschuetzter Zugriff / RBAC)",
+      "description": "",
+      "environment": {},
+      "metaSortKey": -50
+    },
+    {
+      "_id": "req_signup_admin",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "POST signup – admin",
+      "description": "Legt den Benutzer 'admin' an (bekommt automatisch ROLE_USER). Admin-Rolle danach per SQL setzen.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/auth/signup",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"admin\",\n  \"email\": \"admin@test.ch\",\n  \"password\": \"test123\"\n}"
+      }
+    },
+    {
+      "_id": "req_signup_user",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "POST signup – user",
+      "description": "Legt einen normalen Benutzer 'user' an (ROLE_USER).",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/auth/signup",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -90,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"user\",\n  \"email\": \"user@test.ch\",\n  \"password\": \"test123\"\n}"
+      }
+    },
+    {
+      "_id": "req_signin_admin",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "POST signin – admin  (Token holen)",
+      "description": "Login als admin. Den 'token' aus der Antwort kopieren und in der Umgebung bei 'admin_token' einfuegen.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/auth/signin",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -80,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"admin\",\n  \"password\": \"test123\"\n}"
+      }
+    },
+    {
+      "_id": "req_signin_user",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "POST signin – user  (Token holen)",
+      "description": "Login als user. Den 'token' aus der Antwort kopieren und in der Umgebung bei 'user_token' einfuegen.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/auth/signin",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -70,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"user\",\n  \"password\": \"test123\"\n}"
+      }
+    },
+    {
+      "_id": "req_games_notoken",
+      "_type": "request",
+      "parentId": "fld_games",
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "GET games – OHNE Token  → 401",
+      "description": "Kein Authorization-Header → HTTP 401 Unauthorized (nicht eingeloggt).",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/games",
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": -100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "req_games_admin",
+      "_type": "request",
+      "parentId": "fld_games",
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "GET games – MIT Token  → 200",
+      "description": "Mit gueltigem Token → HTTP 200 + Liste.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/games",
+      "headers": [],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.admin_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -90,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {}
+    },
+    {
+      "_id": "req_create_admin",
+      "_type": "request",
+      "parentId": "fld_games",
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "POST games – als ADMIN  → 201",
+      "description": "Admin darf schreiben → HTTP 201 Created.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/games",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.admin_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -80,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Half-Life 2\",\n  \"steamAppId\": 220,\n  \"playtimeHours\": 30,\n  \"installed\": true,\n  \"price\": 9.99\n}"
+      }
+    },
+    {
+      "_id": "req_create_user",
+      "_type": "request",
+      "parentId": "fld_games",
+      "modified": 1782391915000,
+      "created": 1782391915000,
+      "name": "POST games – als USER  → 403",
+      "description": "Normaler User darf NICHT schreiben → HTTP 403 Forbidden. Das Kernstueck der RBAC-Demo.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/games",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.user_token }}",
+        "disabled": false
+      },
+      "metaSortKey": -70,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Portal 2\",\n  \"steamAppId\": 620,\n  \"playtimeHours\": 25,\n  \"installed\": true,\n  \"price\": 9.99\n}"
+      }
+    }
+  ]
+}
